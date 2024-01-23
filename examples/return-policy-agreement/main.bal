@@ -15,19 +15,19 @@
 // under the License.
 
 import ballerina/io;
-import ballerinax/docusign.dsclick as click;
+import ballerinax/docusign.dsclick;
 import ballerina/lang.array;
 
 configurable string accessToken = ?;
 configurable string accountId = ?;
 
 public function main() returns error? {
-    click:Client docuSignClient = check new(serviceUrl = "https://demo.docusign.net/clickapi", config = { auth: {
+    dsclick:Client docuSignClient = check new(serviceUrl = "https://demo.docusign.net/clickapi", config = { auth: {
         token: accessToken
     }});
 
     io:println(docuSignClient);
-    click:ClickwrapRequest returnPolicyPayload =  {
+    dsclick:ClickwrapRequest returnPolicyPayload =  {
         clickwrapName: "ReturnPolicy",
         documents: [
             {
@@ -47,20 +47,20 @@ public function main() returns error? {
         }
     };
 
-    click:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
+    dsclick:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
 
     string clickwrapId = <string>newClickWrap.clickwrapId;
     string versionId = <string>newClickWrap.versionId;
-    click:ClickwrapVersionSummaryResponse versionResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId];
+    dsclick:ClickwrapVersionSummaryResponse versionResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId];
     io:println(versionResponse);
 
     returnPolicyPayload.displaySettings.displayName = "Return Policy Updated";
-    click:ClickwrapVersionSummaryResponse updateClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionId].put(returnPolicyPayload);
+    dsclick:ClickwrapVersionSummaryResponse updateClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionId].put(returnPolicyPayload);
     io:println(updateClickWrap);
 
-    click:ClickwrapAgreementsResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionId]/users();
+    dsclick:ClickwrapAgreementsResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionId]/users();
     io:println(response);
 
-    click:ClickwrapVersionsDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
+    dsclick:ClickwrapVersionsDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
     io:println(deleteResponse);
 }
