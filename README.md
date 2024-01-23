@@ -86,19 +86,19 @@ import ballerinax/docusign.dsclick;
 
 ### Step 2: Instantiate a new connector
 
-Create a `click:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+Create a `dsclick:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
 configurable string accessToken = ?;
 
-click:ConnectionConfig connectionConfig = {
+dsclick:ConnectionConfig connectionConfig = {
     auth: {
         token: accessToken
     }
 };
 
 public function main() returns error? {
-    click:Client docuSignClient = check new(
+    dsclick:Client docuSignClient = check new(
         config = connectionConfig,
         serviceUrl = "https://demo.docusign.net/clickapi"
     );
@@ -111,10 +111,10 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    click:Client docuSignClient = ...// Initialize the DocuSign Click connector;
+    dsclick:Client docuSignClient = ...// Initialize the DocuSign Click connector;
 
     // Prepare the clickwrap request payload
-    click:ClickwrapRequest returnPolicyPayload =  {
+    dsclick:ClickwrapRequest returnPolicyPayload =  {
         clickwrapName: "ReturnPolicy",
         documents: [
             {
@@ -135,7 +135,7 @@ public function main() returns error? {
     };
 
     // Create a new clickwrap
-    click:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
+    dsclick:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
 }
 ```
 
