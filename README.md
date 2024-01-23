@@ -1,16 +1,16 @@
 # Ballerina Docusign Click Connector
 
-[![Build](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/ci.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/ci.yml)
-[![Trivy](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/trivy-scan.yml)
-[![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-docusign.click/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-docusign.click)
-[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/build-with-bal-test-graalvm.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.click/actions/workflows/build-with-bal-test-graalvm.yml)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-docusign.click.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.click/commits/main)
-[![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/docusign.click.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%2Fdocusign.click)
+[![Build](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/ci.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/ci.yml)
+[![Trivy](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/trivy-scan.yml)
+[![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-docusign.dsclick/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-docusign.dsclick)
+[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/build-with-bal-test-graalvm.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/actions/workflows/build-with-bal-test-graalvm.yml)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-docusign.dsclick.svg)](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/commits/main)
+[![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/docusign.dsclick.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%2Fdocusign.dsclick)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The DocuSign Click connector can be used for simple agreements like terms & conditions and privacy policies, etc. It enables users to capture consent with just one click which simplifies the agreement process and enhances the user experience with this functionality. For more information about configuration and operations, refer to the module.
 
-- [docusign.click](ballerina/Module.md) - Perform DocuSign Click related operations
+- [docusign.dsclick](ballerina/Module.md) - Perform DocuSign Click related operations
 
 ## Overview
 
@@ -74,14 +74,14 @@ Above is about using the DocuSign Click APIs in the developer mode. If your app 
 
 ## Quickstart
 
-This sample demonstrates a scenario of creating a secondary calendar and adding a new event to it using the Ballerina Google Calendar connector.
+This sample demonstrates a scenario of creating a clickwrap to agree for some conditions with a single click.
 
 ### Step 1: Import the package
 
-Import the `ballerinax/docusign.click` package into your Ballerina project.
+Import the `ballerinax/docusign.dsclick` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/docusign.click;
+import ballerinax/docusign.dsclick;
 ```
 
 ### Step 2: Instantiate a new connector
@@ -100,7 +100,7 @@ click:ConnectionConfig connectionConfig = {
 public function main() returns error? {
     click:Client docuSignClient = check new(
         config = connectionConfig,
-        serviceUrl = "http://localhost:9092/clickapi"
+        serviceUrl = "https://demo.docusign.net/clickapi"
     );
 }
 ```
@@ -111,19 +111,42 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    click:Client docusignClient = ...//;
-    
+    click:Client docuSignClient = ...// Initialize the DocuSign Click connector;
+
+    // Prepare the clickwrap request payload
+    click:ClickwrapRequest returnPolicyPayload =  {
+        clickwrapName: "ReturnPolicy",
+        documents: [
+            {
+                documentName: "Test Doc",
+                documentBase64: array:toBase64(check io:fileReadBytes("/path/to/your/file.pdf")),
+                fileExtension: "pdf"
+            }
+        ],
+        displaySettings: {
+            displayName: "Return Policy",
+            consentButtonText: "I Agree",
+            downloadable: true,
+            format: "modal",
+            requireAccept: true,
+            documentDisplay: "document",
+            sendToEmail: true 
+        }
+    };
+
+    // Create a new clickwrap
+    click:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
 }
 ```
 
 ## Examples
 
-The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples).
+The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples).
 
-1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples/return-policy-agreement)
+1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/return-policy-agreement)
     This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a return policy to ensure customers acknowledge and agree to the terms before making a purchase.
 
-2. [Agree to Terms and Conditions with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples/terms-and-conditions)
+2. [Agree to Terms and Conditions with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/terms-and-conditions)
     This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a terms and condition application and users can agree them with just one click.
 
 ## Issues and Projects
@@ -155,8 +178,6 @@ This repository only contains the source code for the package.
    export packageUser=<Your GitHub Username>
    export packagePAT=<GitHub Personal Access Token>
     ```
-
-To utilize the Google Calendar connector in your Ballerina application, modify the `.bal` file as follows:
 
 ### Build options
 

@@ -1,13 +1,13 @@
 ## Examples
 
-The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples).
+The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples).
 
-1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples/return-policy-agreement)
+1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/return-policy-agreement)
     This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a return policy to ensure customers acknowledge and agree to the terms before making a purchase.
 
 ## Prerequisites
 
-1. Follow the [instructions](https://github.com/ballerina-platform/module-ballerinax-docusign.click#set-up-guide) to set up the DocuSign Click API.
+1. Follow the [instructions](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick#set-up-guide) to set up the DocuSign Click API.
 
 2. For each example, create a `Config.toml` file with your OAuth2 tokens, client ID, and client secret. Here's an example of how your `Config.toml` file should look:
 

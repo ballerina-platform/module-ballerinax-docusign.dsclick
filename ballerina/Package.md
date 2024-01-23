@@ -60,14 +60,14 @@ Above is about using the DocuSign Click APIs in the developer mode. If your app 
 
 ## Quickstart
 
-This sample demonstrates a scenario of creating a secondary calendar and adding a new event to it using the Ballerina Google Calendar connector.
+This sample demonstrates a scenario of creating a clickwrap to agree for some conditions with a single click.
 
 ### Step 1: Import the package
 
-Import the `ballerinax/docusign.click` package into your Ballerina project.
+Import the `ballerinax/docusign.dsclick` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/docusign.click;
+import ballerinax/docusign.dsclick;
 ```
 
 ### Step 2: Instantiate a new connector
@@ -86,7 +86,7 @@ click:ConnectionConfig connectionConfig = {
 public function main() returns error? {
     click:Client docuSignClient = check new(
         config = connectionConfig,
-        serviceUrl = "http://localhost:9092/clickapi"
+        serviceUrl = "https://demo.docusign.net/clickapi"
     );
 }
 ```
@@ -97,14 +97,37 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    click:Client docusignClient = ...//;
-    
+    click:Client docuSignClient = ...// Initialize the DocuSign Click connector;
+
+    // Prepare the clickwrap request payload
+    click:ClickwrapRequest returnPolicyPayload =  {
+        clickwrapName: "ReturnPolicy",
+        documents: [
+            {
+                documentName: "Test Doc",
+                documentBase64: array:toBase64(check io:fileReadBytes("/path/to/your/file.pdf")),
+                fileExtension: "pdf"
+            }
+        ],
+        displaySettings: {
+            displayName: "Return Policy",
+            consentButtonText: "I Agree",
+            downloadable: true,
+            format: "modal",
+            requireAccept: true,
+            documentDisplay: "document",
+            sendToEmail: true 
+        }
+    };
+
+    // Create a new clickwrap
+    click:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
 }
 ```
 
 ## Examples
 
-The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples).
+The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples).
 
-1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.click/tree/main/examples/return-policy-agreement)
+1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/return-policy-agreement)
     This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a return policy to ensure customers acknowledge and agree to the terms before making a purchase.
