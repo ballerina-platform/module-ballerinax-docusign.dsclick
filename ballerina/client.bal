@@ -57,7 +57,7 @@ public isolated client class Client {
 
     # Gets the current version and other information about the Click API.
     #
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get service_information() returns ServiceInformation|error {
         string resourcePath = string `/service_information`;
         ServiceInformation response = check self.clientEp->get(resourcePath);
@@ -79,7 +79,7 @@ public isolated client class Client {
     # - `active`
     # - `inactive`
     # + to_date - Optional. The latest date to return agreements from.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps(string? from_date = (), string? ownerUserId = (), string? page_number = (), string? shared = (), string? status = (), string? to_date = ()) returns ClickwrapVersionsResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
         map<anydata> queryParam = {"from_date": from_date, "ownerUserId": ownerUserId, "page_number": page_number, "shared": shared, "status": status, "to_date": to_date};
@@ -96,7 +96,7 @@ public isolated client class Client {
     # value from the **API Account ID** field in
     # the **API and Keys** page in
     # eSignature Settings.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function post v1/accounts/[string accountId]/clickwraps(ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
         http:Request request = new;
@@ -115,7 +115,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapIds - A comma-separated list of clickwrap IDs to delete.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function delete v1/accounts/[string accountId]/clickwraps(string? clickwrapIds = ()) returns ClickwrapsDeleteResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
         map<anydata> queryParam = {"clickwrapIds": clickwrapIds};
@@ -133,7 +133,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]() returns ClickwrapVersionSummaryResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
         ClickwrapVersionSummaryResponse response = check self.clientEp->get(resourcePath);
@@ -149,7 +149,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId](ClickwrapTransferRequest payload) returns ClickwrapVersionSummaryResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
         http:Request request = new;
@@ -169,7 +169,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
     # + versions - A comma-separated list of versions to delete.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId](string? versions = ()) returns ClickwrapVersionsDeleteResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
         map<anydata> queryParam = {"versions": versions};
@@ -187,7 +187,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements(UserAgreementRequest payload) returns UserAgreementResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements`;
         http:Request request = new;
@@ -207,7 +207,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + agreementId - The agreement ID.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId]() returns UserAgreementResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements/${getEncodedUri(agreementId)}`;
         UserAgreementResponse response = check self.clientEp->get(resourcePath);
@@ -224,7 +224,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + agreementId - The agreement ID.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId]/download() returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements/${getEncodedUri(agreementId)}/download`;
         http:Response response = check self.clientEp->get(resourcePath);
@@ -245,7 +245,7 @@ public isolated client class Client {
     # + page_number - Optional. The page number to return.
     # + status - Optional. The status of the clickwraps to return.
     # + to_date - Optional. The latest date to return agreements from.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/users`;
         map<anydata> queryParam = {"client_user_id": client_user_id, "from_date": from_date, "page_number": page_number, "status": status, "to_date": to_date};
@@ -263,7 +263,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions`;
         http:Request request = new;
@@ -283,7 +283,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
     # + clickwrapVersionIds - A comma-separated list of clickwrap version IDs to delete.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(string? clickwrapVersionIds = ()) returns ClickwrapVersionsDeleteResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions`;
         map<anydata> queryParam = {"clickwrapVersionIds": clickwrapVersionIds};
@@ -302,7 +302,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
     # + versionId - The ID of the version.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]() returns ClickwrapVersionResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
         ClickwrapVersionResponse response = check self.clientEp->get(resourcePath);
@@ -319,7 +319,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
     # + versionId - The ID of the version.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId](ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
         http:Request request = new;
@@ -339,7 +339,7 @@ public isolated client class Client {
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
     # + versionId - The ID of the version.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]() returns ClickwrapVersionDeleteResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
         ClickwrapVersionDeleteResponse response = check self.clientEp->delete(resourcePath);
@@ -363,7 +363,7 @@ public isolated client class Client {
     # - `inactive`
     # - `deleted`
     # + to_date - Optional. The latest date to return agreements from.
-    # + return - Successful response. 
+    # + return - A successful response or an error. 
     resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}/users`;
         map<anydata> queryParam = {"client_user_id": client_user_id, "from_date": from_date, "page_number": page_number, "status": status, "to_date": to_date};
