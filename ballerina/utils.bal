@@ -21,13 +21,13 @@ type SimpleBasicType string|boolean|int|float|decimal;
 # Represents encoding mechanism details.
 type Encoding record {
     # Defines how multiple values are delimited
-    string style = FORM;
+    EncodingStyle style = FORM;
     # Specifies whether arrays and objects should generate as separate fields
     boolean explode = true;
     # Specifies the custom content type
     string contentType?;
     # Specifies the custom headers
-    map<any> headers?;
+    map<string> headers?;
 };
 
 enum EncodingStyle {
@@ -175,9 +175,8 @@ isolated function getEncodedUri(anydata value) returns string {
     string|error encoded = url:encode(value.toString(), "UTF8");
     if encoded is string {
         return encoded;
-    } else {
-        return value.toString();
     }
+    return value.toString();
 }
 
 # Generate query path with query parameter.

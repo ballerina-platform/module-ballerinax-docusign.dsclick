@@ -100,39 +100,6 @@ function testCreateClickWrap() returns error? {
     _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
 }
 
-// @test:Config {
-//     groups: ["account"]
-// }
-// function testUpdateClickWrap() returns error? {
-//     string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
-//     string clickwrapName = "ReturnPolicy";
-//     ClickwrapRequest payload =  {
-//         clickwrapName: clickwrapName,
-//         documents: [
-//             {
-//                 documentName: "Test Doc",
-//                 documentBase64: base64Encoded,
-//                 fileExtension: "pdf"
-//             }
-//         ],
-//         displaySettings: {
-//             displayName: "Return Policy",
-//             consentButtonText: "I Agree",
-//             downloadable: true,
-//             format: "modal",
-//             requireAccept: true,
-//             documentDisplay: "document",
-//             sendToEmail: true 
-//         }
-//     };
-//     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-//     ClickwrapVersionSummaryResponse updatedResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].put({
-//         transferFromUserId: response.ownerUserId,
-//         transferToUserId: ""
-//     });
-//     test:assertEquals(updatedResponse.accountId, accountId);
-// }
-
 @test:Config {
     groups: ["account"]
 }
