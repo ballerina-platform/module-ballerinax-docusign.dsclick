@@ -211,6 +211,5 @@ isolated function getPathForQueryParam(map<anydata> queryParam, map<Encoding> en
         }
         _ = param.pop();
     }
-    string restOfPath = string:'join("", ...param);
-    return restOfPath;
+    return string:'join("", ...param);
 }
