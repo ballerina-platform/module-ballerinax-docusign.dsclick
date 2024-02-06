@@ -97,7 +97,11 @@ function testCreateClickWrap() returns error? {
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
     test:assertEquals(response.clickwrapName, clickwrapName);
-    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
 }
 
 @test:Config {
@@ -127,7 +131,11 @@ function testDeleteClickWrap() returns error? {
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
     test:assertEquals(response.clickwrapName, clickwrapName);
-    ClickwrapVersionsDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    ClickwrapVersionsDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
     test:assertEquals(deleteResponse.clickwrapId, response.clickwrapId);
 }
 
@@ -155,9 +163,13 @@ function testGetSingleClickwrap() returns error? {
         }
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-    ClickwrapVersionSummaryResponse getResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    ClickwrapVersionSummaryResponse getResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]();
     test:assertEquals(getResponse.accountId, accountId);
-    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
+    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
 }
 
 @test:Config {}
@@ -186,7 +198,11 @@ function testGetAllClickwraps() returns error? {
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
     ClickwrapVersionsResponse allClickwraps = check docuSignClient->/v1/accounts/[accountId]/clickwraps();
     test:assertNotEquals(allClickwraps.clickwraps, ());
-    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
 }
 
 @test:Config {
@@ -215,7 +231,15 @@ function testDeleteClickwrapVersionByNumber() returns error? {
         }
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-    ClickwrapVersionDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]/versions/[<string>response.versionNumber].delete();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    string? versionNumber = response.versionNumber;
+    if versionNumber is () {
+        return error("Version number is not available");
+    }
+    ClickwrapVersionDeleteResponse deleteResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionNumber].delete();
     test:assertEquals(deleteResponse.versionNumber, response.versionNumber);
 }
 
@@ -245,7 +269,15 @@ function testGetClickwrapAgreementsByVersionNumber() returns error? {
         }
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-    ClickwrapAgreementsResponse agreementResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]/versions/[<string>response.versionNumber]/users();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    string? versionNumber = response.versionNumber;
+    if versionNumber is () {
+        return error("Version number is not available");
+    }
+    ClickwrapAgreementsResponse agreementResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionNumber]/users();
     test:assertEquals(agreementResponse.userAgreements, []);
 }
 
@@ -275,9 +307,17 @@ function testGetClickwrapVersionByNumber() returns error? {
         }
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-    ClickwrapVersionResponse getResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]/versions/[<string>response.versionNumber]();
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    string? versionNumber = response.versionNumber;
+    if versionNumber is () {
+        return error("Version number is not available");
+    }
+    ClickwrapVersionResponse getResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionNumber]();
     test:assertEquals(getResponse.accountId, accountId);
-    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId].delete();
+    _ = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId].delete();
 }
 
 @test:Config {
@@ -307,7 +347,11 @@ function testUpdateClickwrapVersionByNumber() returns error? {
     };
     string clickwrapUpdatedName = "Updated Clickwrap";
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
-    ClickwrapVersionSummaryResponse updateRes = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]/versions/[<string>response.versionNumber].put({
+    string? clickwrapId = response.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap Id is not available");
+    }
+    ClickwrapVersionSummaryResponse updateRes = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionNumber].put({
         clickwrapName: clickwrapUpdatedName
     });
     test:assertEquals(updateRes.clickwrapName, clickwrapUpdatedName);
@@ -339,7 +383,11 @@ function testPostUserAgreement() returns error? {
     };
     ClickwrapVersionSummaryResponse response = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(payload);
     if response.status == "active" {
-        UserAgreementResponse agreementResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[<string>response.clickwrapId]/agreements.post({
+        string? clickwrapId = response.clickwrapId;
+        if clickwrapId is () {
+            return error("Clickwrap Id is not available");
+        }
+        UserAgreementResponse agreementResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/agreements.post({
             clientUserId: userId
         });
 
