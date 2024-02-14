@@ -23,18 +23,24 @@ Client docuSignClient = test:mock(Client);
 
 configurable boolean isTestOnLiveServer = os:getEnv("IS_TEST_ON_LIVE_SERVER") == "true";
 
-configurable string accessToken = ?;
-configurable string userId = ?;
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
 configurable string accountId = ?;
+configurable string userId = ?;
 
 @test:BeforeSuite
-function initializeClientsForDocuSignServer () returns error? {
+function initializeClientsForDocuSignServer() returns error? {
     if isTestOnLiveServer {
         docuSignClient = check new(
             {
                 timeout: 10000,
                 auth: {
-                    token: os:getEnv("ACCESS_TOKEN")
+                    clientId: os:getEnv("CLIENT_ID"),
+                    clientSecret: os:getEnv("CLIENT_SECRET"),
+                    refreshToken: os:getEnv("REFRESH_TOKEN"),
+                    refreshUrl: os:getEnv("REFRESH_URL")
                 }
             },
             serviceUrl = "https://demo.docusign.net/clickapi/"
@@ -44,7 +50,10 @@ function initializeClientsForDocuSignServer () returns error? {
             {
                 timeout: 10000,
                 auth: {
-                    token: accessToken
+                    clientId: clientId,
+                    clientSecret: clientSecret,
+                    refreshToken: refreshToken,
+                    refreshUrl: refreshUrl
                 }
             },
             serviceUrl = "http://localhost:9092/clickapi"
@@ -350,6 +359,10 @@ function testUpdateClickwrapVersionByNumber() returns error? {
     string? clickwrapId = response.clickwrapId;
     if clickwrapId is () {
         return error("Clickwrap Id is not available");
+    }
+    string? versionNumber = response.versionNumber;
+    if versionNumber is () {
+        return error("Version number is not available");
     }
     ClickwrapVersionSummaryResponse updateRes = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId]/versions/[versionNumber].put({
         clickwrapName: clickwrapUpdatedName

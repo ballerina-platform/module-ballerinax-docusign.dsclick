@@ -17,14 +17,27 @@
 import ballerina/io;
 import ballerinax/docusign.dsclick;
 import ballerina/lang.array;
+import ballerina/os;
 
-configurable string accessToken = ?;
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
 configurable string accountId = ?;
+configurable string userId = ?;
 
 public function main() returns error? {
-    dsclick:Client docuSignClient = check new(serviceUrl = "https://demo.docusign.net/clickapi", config = { auth: {
-        token: accessToken
-    }});
+    dsclick:Client docuSignClient = check new(
+        {
+            auth: {
+                clientId: os:getEnv("CLIENT_ID"),
+                clientSecret: os:getEnv("CLIENT_SECRET"),
+                refreshToken: os:getEnv("REFRESH_TOKEN"),
+                refreshUrl: os:getEnv("REFRESH_URL")
+            }
+        },
+        serviceUrl = "https://demo.docusign.net/clickapi/"
+    );
 
     io:println(docuSignClient);
     string base64Encoded = array:toBase64(check io:fileReadBytes("./resources/Terms.pdf"));
