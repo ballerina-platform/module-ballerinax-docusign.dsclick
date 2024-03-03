@@ -1,4 +1,4 @@
-# Managing clickwraps with DocuSign API
+# Managing return policy agreement clickwrap with DocuSign
 
 This guide demonstrates the integration of the DocuSign Click API in a Ballerina application for managing clickwraps. The example covers creating, updating, retrieving versions, fetching user agreements, and deleting clickwraps.
 
