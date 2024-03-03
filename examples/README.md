@@ -22,7 +22,7 @@ The DocuSign Click connector provides practical examples illustrating usage in v
     accountId = "<Account ID>"
     ```
 
-## Running an Example
+## Running an example
 
 Execute the following commands to build an example from the source:
 
@@ -38,7 +38,7 @@ Execute the following commands to build an example from the source:
     bal run
     ```
 
-## Building the Examples with the Local Module
+## Building the examples with the local module
 
 **Warning**: Due to the absence of support for reading local repositories for single Ballerina files, the Bala of the module is manually written to the central repository as a workaround. Consequently, the bash script may modify your local Ballerina repositories.
 
