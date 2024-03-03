@@ -4,11 +4,11 @@ The Ballerina Docusign Click Connector provides the capability to capture user c
 
 The Ballerina Docusign Click module supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
 
-## Set up Guide
+## Setup guide
 
-To utilize the DocuSign Click connector, you must have access to the DocuSign REST APIs through a DocuSign account.
+To utilize the DocuSign Click connector, you must have access to the DocuSign REST API through a DocuSign account.
 
-### Step 1: Create a DocuSign Account
+### Step 1: Create a DocuSign account
 
 In order to use the DocuSign Click connector, you need to first create the DocuSign credentials for the connector to interact with DocuSign.
 
@@ -16,33 +16,33 @@ In order to use the DocuSign Click connector, you need to first create the DocuS
 
     <img src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-docusign.dsclick/main/ballerina/resources/create-account.png" alt="Create DocuSign Account" width="50%">
 
-### Step 2: Create Integration Key and Secret Key
+### Step 2: Create integration key and secret key
 
-1. **Create an Integration Key and Secret Key**: Visit the [Apps and Keys](https://admindemo.docusign.com/apps-and-keys) page on DocuSign. Click on "Add App and Integration Key", provide an App name, and click "Create App". This will generate an Integration Key.
+1. **Create an integration key**: Visit the [Apps and Keys](https://admindemo.docusign.com/apps-and-keys) page on DocuSign. Click on `Add App and Integration Key,` provide a name for the app, and click `Create App`. This will generate an `Integration Key`.
 
     <img src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-docusign.dsclick/main/ballerina/resources/app-and-integration-key.png" alt="Create Integration Key" width="50%">
 
-2. **Generate a Secret Key**: Under the Authentication section, click on "Add Secret Key". This will generate a Secret Key. Make sure to copy and save both the Integration Key and Secret Key.
+2. **Generate a secret key**: Under the `Authentication` section, click on `Add Secret Key`. This will generate a secret Key. Make sure to copy and save both the `Integration Key` and `Secret Key`.
 
     <img src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-docusign.dsclick/main/ballerina/resources/add-secret-key.png" alt="Add Secret Key" width="50%">
 
-### Step 3: Generate Access Token
+### Step 3: Generate refresh token
 
-1. **Add a Redirect URI**: Click on "Add URI" and enter your redirect URI (e.g., <http://www.example.com/callback>).
+1. **Add a redirect URI**: Click on `Add URI` and enter your redirect URI (e.g., <http://www.example.com/callback>).
 
     <img src="https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-docusign.dsclick/main/ballerina/resources/add-redirect-uri.png" alt="Add Redirect URI" width="50%">
 
-2. **Generate the Encoded Key**: The Encoded Key is a base64 encoded string of your Integration Key and Secret Key in the format `{IntegrationKey:SecretKey}`. You can generate this in your web browser's console using the `btoa()` function: `btoa('IntegrationKey:SecretKey')`. You can either generate the encoded key from an online base64 encoder.
+2. **Generate the encoded key**: The `Encoded Key` is a base64 encoded string of your `Integration key` and `Secret Key` in the format `{IntegrationKey:SecretKey}`. You can generate this in your web browser's console using the `btoa()` function: `btoa('IntegrationKey:SecretKey')`. You can either generate the encoded key from an online base64 encoder.
 
-3. **Get the Authorization Code**: Visit the following URL in your web browser, replacing `{iKey}` with your Integration Key and `{redirectUri}` with your Redirect URI:
+3. **Get the authorization code**: Visit the following URL in your web browser, replacing `{iKey}` with your Integration Key and `{redirectUri}` with your redirect URI.
 
     ```url
     https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20organization_read%20click.manage&client_id={iKey}&redirect_uri={redirectUri}
     ```
 
-    This will redirect you to your Redirect URI with a `code` query parameter. This is your Authorization Code.
+    This will redirect you to your Redirect URI with a `code` query parameter. This is your `authorization code`.
 
-4. **Get the Access Token**: Use the following `curl` command to get the Access Token, replacing `{encodedKey}` with your Encoded Key and `{codeFromUrl}` with your Authorization Code:
+4. **Get the refresh token**: Use the following `curl` command to get the refresh token, replacing `{encodedKey}` with your Encoded Key and `{codeFromUrl}` with your `authorization code`.
 
     ```bash
     curl --location 'https://account-d.docusign.com/oauth/token' \
@@ -52,7 +52,7 @@ In order to use the DocuSign Click connector, you need to first create the DocuS
     --data-urlencode 'grant_type=authorization_code'
     ```
 
-    The response will contain your Access Token.
+    The response will contain your refresh token. Use `https://account-d.docusign.com/oauth/token` as the refresh URL.
 
 Remember to replace `{IntegrationKey:SecretKey}`, `{iKey}`, `{redirectUri}`, `{encodedKey}`, and `{codeFromUrl}` with your actual values.
 
@@ -60,11 +60,11 @@ Above is about using the DocuSign Click APIs in the developer mode. If your app 
 
 ## Quickstart
 
-This sample demonstrates a scenario of creating a clickwrap to agree for some conditions with a single click.
+To use the DocuSign Click connector in your Ballerina project, modify the `.bal` file as follows.
 
-### Step 1: Import the package
+### Step 1: Import the module
 
-Import the `ballerinax/docusign.dsclick` package into your Ballerina project.
+Import the `ballerinax/docusign.dsclick` module into your Ballerina project.
 
 ```ballerina
 import ballerinax/docusign.dsclick;
@@ -75,20 +75,19 @@ import ballerinax/docusign.dsclick;
 Create a `dsclick:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
-configurable string accessToken = ?;
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
 
-dsclick:ConnectionConfig connectionConfig = {
+dsesign:Client docusignClient = check new({
     auth: {
-        token: accessToken
+        clientId,
+        clientSecret,
+        refreshToken,
+        refreshUrl
     }
-};
-
-public function main() returns error? {
-    dsclick:Client docuSignClient = check new(
-        config = connectionConfig,
-        serviceUrl = "https://demo.docusign.net/clickapi"
-    );
-}
+});
 ```
 
 ### Step 3: Invoke the connector operation
@@ -97,7 +96,7 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    dsclick:Client docuSignClient = ...// Initialize the DocuSign Click connector;
+    dsesign:Client docusignClient = ...// instantiates the DocuSign Click client
 
     // Prepare the clickwrap request payload
     dsclick:ClickwrapRequest returnPolicyPayload =  {
@@ -105,7 +104,7 @@ public function main() returns error? {
         documents: [
             {
                 documentName: "Test Doc",
-                documentBase64: array:toBase64(check io:fileReadBytes("/path/to/your/file.pdf")),
+                documentBase64: "base64-encoded-pdf-file",
                 fileExtension: "pdf"
             }
         ],
@@ -123,6 +122,16 @@ public function main() returns error? {
     // Create a new clickwrap
     dsclick:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(returnPolicyPayload);
 }
+```
+
+>**Hint:** To apply a value to the `documentBase64` field, you can either use an online tool designed to convert a PDF file into a base64-encoded string, or you can refer to the provided [example code](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/blob/main/examples/return-policy-agreement/main.bal#L47)
+
+### Step 4: Run the Ballerina application
+
+Use the following command to compile and run the Ballerina program.
+
+```bash
+bal run
 ```
 
 ## Examples
