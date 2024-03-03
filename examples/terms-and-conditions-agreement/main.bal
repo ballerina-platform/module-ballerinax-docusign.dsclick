@@ -19,21 +19,21 @@ import ballerinax/docusign.dsclick;
 import ballerina/lang.array;
 import ballerina/os;
 
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string accountId = ?;
-configurable string userId = ?;
+configurable string clientId = os:getEnv("CLIENT_ID");
+configurable string clientSecret = os:getEnv("CLIENT_SECRET");
+configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
+configurable string refreshUrl = os:getEnv("REFRESH_URL");
+configurable string accountId = os:getEnv("ACCOUNT_ID");
+configurable string userId = os:getEnv("USER_ID");
 
 public function main() returns error? {
     dsclick:Client docuSignClient = check new(
         {
             auth: {
-                clientId: os:getEnv("CLIENT_ID"),
-                clientSecret: os:getEnv("CLIENT_SECRET"),
-                refreshToken: os:getEnv("REFRESH_TOKEN"),
-                refreshUrl: os:getEnv("REFRESH_URL")
+                clientId,
+                clientSecret,
+                refreshToken,
+                refreshUrl
             }
         },
         serviceUrl = "https://demo.docusign.net/clickapi/"
@@ -64,8 +64,14 @@ public function main() returns error? {
     dsclick:ClickwrapVersionSummaryResponse newClickWrap = check docuSignClient->/v1/accounts/[accountId]/clickwraps.post(termsPayload);
     io:println(newClickWrap);
 
-    string clickwrapId = <string>newClickWrap.clickwrapId;
-    string versionId = <string>newClickWrap.versionId;
+    string? clickwrapId = newClickWrap.clickwrapId;
+    if clickwrapId is () {
+        return error("Clickwrap ID is empty");
+    }
+    string? versionId = newClickWrap.versionId;
+    if versionId is () {
+        return error("Version ID is empty");
+    }
     dsclick:ClickwrapVersionSummaryResponse versionResponse = check docuSignClient->/v1/accounts/[accountId]/clickwraps/[clickwrapId];
     io:println(versionResponse);
 
