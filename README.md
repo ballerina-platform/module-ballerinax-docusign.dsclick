@@ -69,7 +69,7 @@ In order to use the DocuSign Click connector, you need to first create the DocuS
 
 Remember to replace `{IntegrationKey:SecretKey}`, `{iKey}`, `{redirectUri}`, `{encodedKey}`, and `{codeFromUrl}` with your actual values.
 
-Above is about using the DocuSign Click APIs in the developer mode. If your app is ready to go live, you need to follow the guidelines given [here](https://developers.docusign.com/docs/esign-rest-api/go-live/) to make it work.
+Above is about using the DocuSign Click API in the developer mode. If your app is ready to go live, you need to follow the guidelines given [here](https://developers.docusign.com/docs/click-api/go-live/) to make it work.
 
 ## Quickstart
 
@@ -93,7 +93,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-dsesign:Client docusignClient = check new({
+dsclick:Client docuSignClient = check new({
     auth: {
         clientId,
         clientSecret,
@@ -109,7 +109,7 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    dsesign:Client docusignClient = ...// instantiates the DocuSign Click client
+    dsclick:Client docuSignClient = ...// instantiates the DocuSign Click client
 
     // Prepare the clickwrap request payload
     dsclick:ClickwrapRequest returnPolicyPayload =  {
@@ -152,10 +152,10 @@ bal run
 The DocuSign Click connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples).
 
 1. [Return Policy Agreement with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/return-policy-agreement)
-    This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a return policy to ensure customers acknowledge and agree to the terms before making a purchase.
+    This example shows how to use DocuSign Click API to to implement a clickwrap agreement for a return policy to ensure customers acknowledge and agree to the terms before making a purchase.
 
 2. [Agree to Terms and Conditions with DocuSign Click](https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick/tree/main/examples/terms-and-conditions)
-    This example shows how to use DocuSign Click APIs to to implement a clickwrap agreement for a terms and condition application and users can agree them with just one click.
+    This example shows how to use DocuSign Click API to to implement a clickwrap agreement for a terms and condition application and users can agree them with just one click.
 
 ## Issues and projects
 
