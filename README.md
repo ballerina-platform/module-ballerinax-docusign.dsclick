@@ -53,7 +53,7 @@ In order to use the DocuSign Click connector, you need to first create the DocuS
     https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20organization_read%20click.manage&client_id={iKey}&redirect_uri={redirectUri}
     ```
 
-    This will redirect you to your Redirect URI with a `code` query parameter. This is your `authorization code`.
+    This will redirect you to your redirect URI with a `code` query parameter. This is your `authorization code`.
 
 4. **Get the refresh token**: Use the following `curl` command to get the refresh token, replacing `{encodedKey}` with your Encoded Key and `{codeFromUrl}` with your `authorization code`.
 
