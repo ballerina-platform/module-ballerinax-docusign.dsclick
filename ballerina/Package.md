@@ -98,7 +98,6 @@ You can now utilize the operations available within the connector. Use the `API 
 configurable string accountId = ?;
 
 public function main() returns error? {
-    dsclick:Client docuSignClient = ...// instantiates the DocuSign Click client
 
     // Prepare the clickwrap request payload
     dsclick:ClickwrapRequest returnPolicyPayload =  {
