@@ -50,10 +50,10 @@ function initializeClientsForDocuSignServer() returns error? {
             {
                 timeout: 10000,
                 auth: {
-                    clientId: clientId,
-                    clientSecret: clientSecret,
-                    refreshToken: refreshToken,
-                    refreshUrl: refreshUrl
+                    clientId,
+                    clientSecret,
+                    refreshToken,
+                    refreshUrl
                 }
             },
             serviceUrl = "http://localhost:9092/clickapi"
