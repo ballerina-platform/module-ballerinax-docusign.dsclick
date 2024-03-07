@@ -7,7 +7,7 @@ distribution = "2201.8.4"
 [[dependency]]
 org = "ballerinax"
 name = "docusign.dsclick"
-version = "0.1.0"
+version = "1.0.0"
 repository = "local"
 
 [build-options]
