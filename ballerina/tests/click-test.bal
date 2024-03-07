@@ -83,7 +83,7 @@ function testServiceInfo() returns error? {
     groups: ["account"]
 }
 function testCreateClickWrap() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -117,7 +117,7 @@ function testCreateClickWrap() returns error? {
     groups: ["account"]
 }
 function testDeleteClickWrap() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -150,7 +150,7 @@ function testDeleteClickWrap() returns error? {
 
 @test:Config {}
 function testGetSingleClickwrap() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -183,7 +183,7 @@ function testGetSingleClickwrap() returns error? {
 
 @test:Config {}
 function testGetAllClickwraps() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -218,7 +218,7 @@ function testGetAllClickwraps() returns error? {
     groups: ["clickwrap"]
 }
 function testDeleteClickwrapVersionByNumber() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -256,7 +256,7 @@ function testDeleteClickwrapVersionByNumber() returns error? {
     groups: ["clickwrap"]
 }
 function testGetClickwrapAgreementsByVersionNumber() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -294,7 +294,7 @@ function testGetClickwrapAgreementsByVersionNumber() returns error? {
     groups: ["clickwrap"]
 }
 function testGetClickwrapVersionByNumber() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -333,7 +333,7 @@ function testGetClickwrapVersionByNumber() returns error? {
     groups: ["clickwrap"]
 }
 function testUpdateClickwrapVersionByNumber() returns error? {
-    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+    string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
@@ -372,7 +372,7 @@ function testUpdateClickwrapVersionByNumber() returns error? {
 
 @test:Config {}
 function testPostUserAgreement() returns error? {
-   string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.pdf"));
+   string base64Encoded = array:toBase64(check io:fileReadBytes("resources/README.txt"));
     string clickwrapName = "ReturnPolicy";
     ClickwrapRequest payload =  {
         clickwrapName: clickwrapName,
