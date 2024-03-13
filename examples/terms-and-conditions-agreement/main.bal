@@ -25,9 +25,11 @@ configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
 configurable string accountId = os:getEnv("ACCOUNT_ID");
 configurable string userId = os:getEnv("USER_ID");
+configurable string serviceUrl = os:getEnv("SERVICE_URL");
 
 public function main() returns error? {
     dsclick:Client docuSignClient = check new(
+        serviceUrl,
         {
             auth: {
                 clientId,
@@ -35,8 +37,7 @@ public function main() returns error? {
                 refreshToken,
                 refreshUrl
             }
-        },
-        serviceUrl = "https://demo.docusign.net/clickapi/"
+        }
     );
 
     io:println(docuSignClient);
