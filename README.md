@@ -7,15 +7,9 @@
 [![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/docusign.dsclick.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%2Fdocusign.dsclick)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The DocuSign Click connector can be used for simple agreements like terms & conditions and privacy policies, etc. It enables users to capture consent with just one click which simplifies the agreement process and enhances the user experience with this functionality. For more information about configuration and operations, refer to the module.
+DocuSign is a digital transaction management platform that enables users to securely sign, send, and manage documents electronically.
 
-- [docusign.dsclick](ballerina/Module.md) - Perform DocuSign Click related operations
-
-## Overview
-
-The Ballerina Docusign Click Connector provides the capability to capture user consent with one click for simple agreements such as terms & conditions and privacy policies
-
-The Ballerina Docusign Click module supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
+The Ballerina DocuSign Click connector integrates with the DocuSign platform, provides APIs to capture user consent with one click for simple agreements such as terms & conditions and privacy policies within Ballerina applications. It supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
 
 ## Setup guide
 

@@ -24,7 +24,7 @@ public isolated client class Client {
     # + config - The configurations to be used when initializing the `connector` 
     # + serviceUrl - URL of the target service 
     # + return - An error if connector initialization failed 
-    public isolated function init(ConnectionConfig config =  {}, string serviceUrl = "https://demo.docusign.net/clickapi") returns error? {
+    public isolated function init(string serviceUrl, *ConnectionConfig config) returns error? {
         http:ClientConfiguration httpClientConfig = {httpVersion: config.httpVersion, timeout: config.timeout, forwarded: config.forwarded, poolConfig: config.poolConfig, compression: config.compression, circuitBreaker: config.circuitBreaker, retryConfig: config.retryConfig, validation: config.validation};
         do {
             if config.auth is http:ClientAuthConfig {
@@ -301,10 +301,10 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + versionId - The ID of the version.
+    # + version - The version ID or the version number
     # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]() returns ClickwrapVersionResponse|error {
-        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]() returns ClickwrapVersionResponse|error {
+        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
         ClickwrapVersionResponse response = check self.clientEp->get(resourcePath);
         return response;
     }
@@ -318,10 +318,10 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + versionId - The ID of the version.
+    # + version - The version ID or the version number
     # + return - A successful response or an error. 
-    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId](ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
-        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
+    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version](ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
+        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
@@ -338,10 +338,10 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + versionId - The ID of the version.
+    # + version - The version ID or the version number
     # + return - A successful response or an error. 
-    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]() returns ClickwrapVersionDeleteResponse|error {
-        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}`;
+    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]() returns ClickwrapVersionDeleteResponse|error {
+        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
         ClickwrapVersionDeleteResponse response = check self.clientEp->delete(resourcePath);
         return response;
     }
@@ -355,7 +355,7 @@ public isolated client class Client {
     # the **API and Keys** page in
     # eSignature Settings.
     # + clickwrapId - The ID of the clickwrap.
-    # + versionId - The ID of the version.
+    # + version - The version ID of the version number
     # + from_date - Optional. The earliest date to return agreements from.
     # + page_number - Optional. The page number to return.
     # + status - Clickwrap status. Possible values:
@@ -364,8 +364,8 @@ public isolated client class Client {
     # - `deleted`
     # + to_date - Optional. The latest date to return agreements from.
     # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string versionId]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
-        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(versionId)}/users`;
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
+        string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}/users`;
         map<anydata> queryParam = {"client_user_id": client_user_id, "from_date": from_date, "page_number": page_number, "status": status, "to_date": to_date};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         ClickwrapAgreementsResponse response = check self.clientEp->get(resourcePath);
