@@ -9,9 +9,6 @@
 Config.toml
 **/Config.toml
 
-# Modules
-/modules/googleapis.docusign.dsclick
-
 # BlueJ files
 *.ctxt
 
