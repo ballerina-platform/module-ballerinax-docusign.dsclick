@@ -14,4 +14,3 @@ jobs:
       repo-name: module-ballerinax-docusign.dsclick
       additional-build-flags: "-x :docusign.dsclick-examples:build"
       additional-test-flags: "-x :docusign.dsclick-examples:build"
-      
