@@ -1,4 +1,4 @@
-// Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
+// Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
 //
 // WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -24,44 +24,18 @@ public isolated client class Client {
     # + config - The configurations to be used when initializing the `connector` 
     # + serviceUrl - URL of the target service 
     # + return - An error if connector initialization failed 
-    public isolated function init(string serviceUrl, *ConnectionConfig config) returns error? {
-        http:ClientConfiguration httpClientConfig = {httpVersion: config.httpVersion, timeout: config.timeout, forwarded: config.forwarded, poolConfig: config.poolConfig, compression: config.compression, circuitBreaker: config.circuitBreaker, retryConfig: config.retryConfig, validation: config.validation};
-        do {
-            if config.auth is http:ClientAuthConfig {
-                httpClientConfig.auth = check config.auth.ensureType(http:ClientAuthConfig);
-            }
-            if config.http1Settings is ClientHttp1Settings {
-                ClientHttp1Settings settings = check config.http1Settings.ensureType(ClientHttp1Settings);
-                httpClientConfig.http1Settings = {...settings};
-            }
-            if config.http2Settings is http:ClientHttp2Settings {
-                httpClientConfig.http2Settings = check config.http2Settings.ensureType(http:ClientHttp2Settings);
-            }
-            if config.cache is http:CacheConfig {
-                httpClientConfig.cache = check config.cache.ensureType(http:CacheConfig);
-            }
-            if config.responseLimits is http:ResponseLimitConfigs {
-                httpClientConfig.responseLimits = check config.responseLimits.ensureType(http:ResponseLimitConfigs);
-            }
-            if config.secureSocket is http:ClientSecureSocket {
-                httpClientConfig.secureSocket = check config.secureSocket.ensureType(http:ClientSecureSocket);
-            }
-            if config.proxy is http:ProxyConfig {
-                httpClientConfig.proxy = check config.proxy.ensureType(http:ProxyConfig);
-            }
-        }
-        http:Client httpEp = check new (serviceUrl, httpClientConfig);
-        self.clientEp = httpEp;
-        return;
+    public isolated function init(ConnectionConfig config =  {}, string serviceUrl = "https://www.docusign.net/clickapi") returns error? {
+        http:ClientConfiguration httpClientConfig = {httpVersion: config.httpVersion, http1Settings: config.http1Settings, http2Settings: config.http2Settings, timeout: config.timeout, forwarded: config.forwarded, followRedirects: config.followRedirects, poolConfig: config.poolConfig, cache: config.cache, compression: config.compression, circuitBreaker: config.circuitBreaker, retryConfig: config.retryConfig, cookieConfig: config.cookieConfig, responseLimits: config.responseLimits, secureSocket: config.secureSocket, proxy: config.proxy, socketConfig: config.socketConfig, validation: config.validation, laxDataBinding: config.laxDataBinding};
+        self.clientEp = check new (serviceUrl, httpClientConfig);
     }
 
     # Gets the current version and other information about the Click API.
     #
-    # + return - A successful response or an error. 
-    resource isolated function get service_information() returns ServiceInformation|error {
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get service_information(map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/service_information`;
-        ServiceInformation response = check self.clientEp->get(resourcePath);
-        return response;
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Gets all the clickwraps for an account.
@@ -71,21 +45,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + from_date - Optional. The earliest date to return agreements from.
-    # + ownerUserId - Optional. The user ID of the owner.
-    # + page_number - Optional. The page number to return.
-    # + status - Optional. The status of the clickwraps to filter by. One of:
-    # - `active`
-    # - `inactive`
-    # + to_date - Optional. The latest date to return agreements from.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps(string? from_date = (), string? ownerUserId = (), string? page_number = (), string? shared = (), string? status = (), string? to_date = ()) returns ClickwrapVersionsResponse|error {
+    # eSignature Settings
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps(map<string|string[]> headers = {}, *ClickwrapsGetClickwrapsQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
-        map<anydata> queryParam = {"from_date": from_date, "ownerUserId": ownerUserId, "page_number": page_number, "shared": shared, "status": status, "to_date": to_date};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapVersionsResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Creates a clickwrap for an account.
@@ -95,15 +62,15 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + return - A successful response or an error. 
-    resource isolated function post v1/accounts/[string accountId]/clickwraps(ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
+    # eSignature Settings
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function post v1/accounts/[string accountId]/clickwraps(ClickwrapRequest payload, map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        ClickwrapVersionSummaryResponse response = check self.clientEp->post(resourcePath, request);
-        return response;
+        return self.clientEp->post(resourcePath, request, headers);
     }
 
     # Deletes clickwraps for an account.
@@ -113,15 +80,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapIds - A comma-separated list of clickwrap IDs to delete.
-    # + return - A successful response or an error. 
-    resource isolated function delete v1/accounts/[string accountId]/clickwraps(string? clickwrapIds = ()) returns ClickwrapsDeleteResponse|error {
+    # eSignature Settings
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function delete v1/accounts/[string accountId]/clickwraps(map<string|string[]> headers = {}, *ClickwrapsDeleteClickwrapsQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps`;
-        map<anydata> queryParam = {"clickwrapIds": clickwrapIds};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapsDeleteResponse response = check self.clientEp->delete(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->delete(resourcePath, headers = headers);
     }
 
     # Gets a  single clickwrap object.
@@ -131,13 +97,13 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]() returns ClickwrapVersionSummaryResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId](map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
-        ClickwrapVersionSummaryResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Updates the user ID of a clickwrap.
@@ -147,16 +113,16 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId](ClickwrapTransferRequest payload) returns ClickwrapVersionSummaryResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId](ClickwrapTransferRequest payload, map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        ClickwrapVersionSummaryResponse response = check self.clientEp->put(resourcePath, request);
-        return response;
+        return self.clientEp->put(resourcePath, request, headers);
     }
 
     # Deletes a clickwrap and all of its versions.
@@ -166,16 +132,15 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + versions - A comma-separated list of versions to delete.
-    # + return - A successful response or an error. 
-    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId](string? versions = ()) returns ClickwrapVersionsDeleteResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId](map<string|string[]> headers = {}, *ClickwrapsDeleteClickwrapQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}`;
-        map<anydata> queryParam = {"versions": versions};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapVersionsDeleteResponse response = check self.clientEp->delete(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->delete(resourcePath, headers = headers);
     }
 
     # Checks if a user has agreed to a clickwrap.
@@ -185,16 +150,16 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements(UserAgreementRequest payload) returns UserAgreementResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements(UserAgreementRequest payload, map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        UserAgreementResponse response = check self.clientEp->post(resourcePath, request);
-        return response;
+        return self.clientEp->post(resourcePath, request, headers);
     }
 
     # Gets a specific agreement for a specified clickwrap.
@@ -204,14 +169,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + agreementId - The agreement ID.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId]() returns UserAgreementResponse|error {
+    # eSignature Settings
+    # + agreementId - The agreement ID
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId](map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements/${getEncodedUri(agreementId)}`;
-        UserAgreementResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Gets the completed user agreement PDF.
@@ -221,14 +186,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + agreementId - The agreement ID.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId]/download() returns http:Response|error {
+    # eSignature Settings
+    # + agreementId - The agreement ID
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/agreements/[string agreementId]/download(map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/agreements/${getEncodedUri(agreementId)}/download`;
-        http:Response response = check self.clientEp->get(resourcePath);
-        return response;
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Get user agreements
@@ -238,20 +203,15 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + client_user_id - The client ID.
-    # + from_date - Optional. The earliest date to return agreements from.
-    # + page_number - Optional. The page number to return.
-    # + status - Optional. The status of the clickwraps to return.
-    # + to_date - Optional. The latest date to return agreements from.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/users(map<string|string[]> headers = {}, *UserAgreementsGetClickwrapAgreementsQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/users`;
-        map<anydata> queryParam = {"client_user_id": client_user_id, "from_date": from_date, "page_number": page_number, "status": status, "to_date": to_date};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapAgreementsResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Creates a new clickwrap version.
@@ -261,16 +221,16 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + return - A successful response or an error. 
-    resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function post v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(ClickwrapRequest payload, map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        ClickwrapVersionSummaryResponse response = check self.clientEp->post(resourcePath, request);
-        return response;
+        return self.clientEp->post(resourcePath, request, headers);
     }
 
     # Deletes the versions of a clickwrap.
@@ -280,16 +240,15 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
-    # + clickwrapVersionIds - A comma-separated list of clickwrap version IDs to delete.
-    # + return - A successful response or an error. 
-    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(string? clickwrapVersionIds = ()) returns ClickwrapVersionsDeleteResponse|error {
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions(map<string|string[]> headers = {}, *ClickwrapVersionsDeleteClickwrapVersionsQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions`;
-        map<anydata> queryParam = {"clickwrapVersionIds": clickwrapVersionIds};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapVersionsDeleteResponse response = check self.clientEp->delete(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->delete(resourcePath, headers = headers);
     }
 
     # Gets a specific version from a clickwrap.
@@ -299,14 +258,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
     # + version - The version ID or the version number
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]() returns ClickwrapVersionResponse|error {
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version](map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
-        ClickwrapVersionResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        return self.clientEp->get(resourcePath, headers);
     }
 
     # Updates a specific version of a clickwrap.
@@ -316,17 +275,17 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
     # + version - The version ID or the version number
-    # + return - A successful response or an error. 
-    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version](ClickwrapRequest payload) returns ClickwrapVersionSummaryResponse|error {
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function put v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version](ClickwrapRequest payload, map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        ClickwrapVersionSummaryResponse response = check self.clientEp->put(resourcePath, request);
-        return response;
+        return self.clientEp->put(resourcePath, request, headers);
     }
 
     # Deletes a specific version of a clickwrap.
@@ -336,14 +295,14 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
     # + version - The version ID or the version number
-    # + return - A successful response or an error. 
-    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]() returns ClickwrapVersionDeleteResponse|error {
+    # + headers - Headers to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function delete v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version](map<string|string[]> headers = {}) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}`;
-        ClickwrapVersionDeleteResponse response = check self.clientEp->delete(resourcePath);
-        return response;
+        return self.clientEp->delete(resourcePath, headers = headers);
     }
 
     # Gets the agreement responses for a clickwrap version.
@@ -353,22 +312,15 @@ public isolated client class Client {
     # DocuSign for any account you create. Copy the
     # value from the **API Account ID** field in
     # the **API and Keys** page in
-    # eSignature Settings.
-    # + clickwrapId - The ID of the clickwrap.
+    # eSignature Settings
+    # + clickwrapId - The ID of the clickwrap
     # + version - The version ID of the version number
-    # + from_date - Optional. The earliest date to return agreements from.
-    # + page_number - Optional. The page number to return.
-    # + status - Clickwrap status. Possible values:
-    # - `active`
-    # - `inactive`
-    # - `deleted`
-    # + to_date - Optional. The latest date to return agreements from.
-    # + return - A successful response or an error. 
-    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]/users(string? client_user_id = (), string? from_date = (), string? page_number = (), string? status = (), string? to_date = ()) returns ClickwrapAgreementsResponse|error {
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + return - A successful response or an error 
+    resource isolated function get v1/accounts/[string accountId]/clickwraps/[string clickwrapId]/versions/[string version]/users(map<string|string[]> headers = {}, *UserAgreementsGetClickwrapVersionAgreementsQueries queries) returns http:Response|error {
         string resourcePath = string `/v1/accounts/${getEncodedUri(accountId)}/clickwraps/${getEncodedUri(clickwrapId)}/versions/${getEncodedUri(version)}/users`;
-        map<anydata> queryParam = {"client_user_id": client_user_id, "from_date": from_date, "page_number": page_number, "status": status, "to_date": to_date};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ClickwrapAgreementsResponse response = check self.clientEp->get(resourcePath);
-        return response;
+        resourcePath = resourcePath + check getPathForQueryParam(queries);
+        return self.clientEp->get(resourcePath, headers);
     }
 }
