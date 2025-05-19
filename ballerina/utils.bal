@@ -1,4 +1,4 @@
-// Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com) All Rights Reserved.
+// Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
 //
 // WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -14,6 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/http;
 import ballerina/url;
 
 type SimpleBasicType string|boolean|int|float|decimal;
@@ -21,20 +22,17 @@ type SimpleBasicType string|boolean|int|float|decimal;
 # Represents encoding mechanism details.
 type Encoding record {
     # Defines how multiple values are delimited
-    EncodingStyle style = FORM;
+    string style = FORM;
     # Specifies whether arrays and objects should generate as separate fields
     boolean explode = true;
     # Specifies the custom content type
     string contentType?;
     # Specifies the custom headers
-    map<string> headers?;
+    map<any> headers?;
 };
 
 enum EncodingStyle {
-    DEEPOBJECT,
-    FORM,
-    SPACEDELIMITED,
-    PIPEDELIMITED
+    DEEPOBJECT, FORM, SPACEDELIMITED, PIPEDELIMITED
 }
 
 final Encoding & readonly defaultEncoding = {};
@@ -175,8 +173,9 @@ isolated function getEncodedUri(anydata value) returns string {
     string|error encoded = url:encode(value.toString(), "UTF8");
     if encoded is string {
         return encoded;
+    } else {
+        return value.toString();
     }
-    return value.toString();
 }
 
 # Generate query path with query parameter.
@@ -185,12 +184,13 @@ isolated function getEncodedUri(anydata value) returns string {
 # + encodingMap - Details on serialization mechanism
 # + return - Returns generated Path or error at failure of client initialization
 isolated function getPathForQueryParam(map<anydata> queryParam, map<Encoding> encodingMap = {}) returns string|error {
+    map<anydata> queriesMap = http:getQueryMap(queryParam);
     string[] param = [];
-    if queryParam.length() > 0 {
+    if queriesMap.length() > 0 {
         param.push("?");
-        foreach var [key, value] in queryParam.entries() {
+        foreach var [key, value] in queriesMap.entries() {
             if value is () {
-                _ = queryParam.remove(key);
+                _ = queriesMap.remove(key);
                 continue;
             }
             Encoding encodingData = encodingMap.hasKey(key) ? encodingMap.get(key) : defaultEncoding;
@@ -211,5 +211,6 @@ isolated function getPathForQueryParam(map<anydata> queryParam, map<Encoding> en
         }
         _ = param.pop();
     }
-    return string:'join("", ...param);
+    string restOfPath = string:'join("", ...param);
+    return restOfPath;
 }
