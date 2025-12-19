@@ -2,7 +2,7 @@
 distribution = "2201.8.4"
 org = "ballerinax"
 name = "docusign.dsclick"
-version = "2.0.0"
+version = "2.0.1"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["eSignature", "Cost/Freemium", "Documents", "Click API", "Collaboration", "Digital Signature"]
