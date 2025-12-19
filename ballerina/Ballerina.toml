@@ -5,7 +5,7 @@ name = "docusign.dsclick"
 version = "2.0.1"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = ["eSignature", "Cost/Freemium", "Documents", "Click API", "Collaboration", "Digital Signature"]
+keywords = ["eSignature", "Cost/Freemium", "Click API", "Collaboration", "Digital Signature", "Vendor/DocuSign", "Area/Documents", "Type/Connector"]
 icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-docusign.dsclick"
 
