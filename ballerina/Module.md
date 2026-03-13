@@ -1,8 +1,13 @@
 ## Overview
 
-[DocuSign](https://www.docusign.com) is a digital transaction management platform that enables users to securely sign, send, and manage documents electronically.
+The DocuSign Click connector integrates with the DocuSign platform, providing APIs to capture user consent with one click for simple agreements such as terms & conditions and privacy policies. It supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
 
-The Ballerina DocuSign Click connector integrates with the DocuSign platform, provides APIs to capture user consent with one click for simple agreements such as terms & conditions and privacy policies within Ballerina applications. It supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
+### Key Features
+
+- Capture user consent with one click
+- Support for terms & conditions and privacy policies
+- Integration with DocuSign Click API V2
+- Efficient management of simple agreements
 
 ## Setup guide
 
@@ -52,7 +57,7 @@ In order to use the DocuSign Click connector, you need to first create the DocuS
     --data-urlencode 'grant_type=authorization_code'
     ```
 
-    The response will contain your refresh token. Use `https://account-d.docusign.com/oauth/token` as the refresh URL.
+    The response will contain your refresh token. Use `https://account-d.docusign.com/oauth/token' as the refresh URL.
 
 Remember to replace `{IntegrationKey:SecretKey}`, `{iKey}`, `{redirectUri}`, `{encodedKey}`, and `{codeFromUrl}` with your actual values.
 
