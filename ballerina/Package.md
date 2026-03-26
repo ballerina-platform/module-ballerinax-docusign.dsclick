@@ -1,8 +1,15 @@
-## Package overview
+## Overview
 
 [DocuSign](https://www.docusign.com) is a digital transaction management platform that enables users to securely sign, send, and manage documents electronically.
 
-The Ballerina DocuSign Click connector integrates with the DocuSign platform, provides APIs to capture user consent with one click for simple agreements such as terms & conditions and privacy policies within Ballerina applications. It supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
+The DocuSign Click connector integrates with the DocuSign platform, providing APIs to capture user consent with one click for simple agreements such as terms & conditions and privacy policies. It supports [DocuSign Click API V2](https://github.com/docusign/OpenAPI-Specifications/blob/master/click.rest.swagger-v2.json).
+
+### Key Features
+
+- Securely sign, send, and manage documents electronically
+- Capture user consent with one click
+- Support for simple agreements like terms & conditions and privacy policies
+- Integration with DocuSign Click API V2
 
 ## Setup guide
 
